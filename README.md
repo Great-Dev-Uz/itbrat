@@ -1,2 +1,6 @@
-# [itbratrf.ru](https://www.itbratrf.ru/)
-IT-brat project Python, DJango(Rest Framework), JWT, Channels, Daphne, Docker
+
+https://www.itbratrf.ru/]
+
+# НАХОДИТЕСЬ В ПОИСКЕ ИНТЕРЕСНОГО  ПРОЕКТА  ИЛИ  КОМАНДЫ?
+
+Объединяйтесь в команды, создавайте проекты, выбирайте лучших из лучших. ITBRAT – здесь вы найдете именно то, что вам нужно.
