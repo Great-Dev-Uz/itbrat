@@ -1,5 +1,5 @@
 
-https://www.itbratrf.ru/]
+[https://www.itbratrf.ru/]
 
 # НАХОДИТЕСЬ В ПОИСКЕ ИНТЕРЕСНОГО  ПРОЕКТА  ИЛИ  КОМАНДЫ?
 
