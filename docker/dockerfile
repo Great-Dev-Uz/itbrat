@@ -1,0 +1,19 @@
+# Base image
+FROM python:3.9-slim
+
+# Set environment variables
+ENV PYTHONUNBUFFERED 1
+ENV DJANGO_SETTINGS_MODULE itbrat.config.settings.product
+
+# Set work directory
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.txt /app/
+RUN pip install -r requirements.txt
+
+# Copy project
+COPY . /app/
+
+# Run migrations and start the server
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
