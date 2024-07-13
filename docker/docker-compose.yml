@@ -1,6 +1,27 @@
 version: '3.8'
 
 services:
+  django:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_EMAIL: test@test.com
+      DJANGO_SUPERUSER_PASSWORD: 1
+      POSTGRES_DB: itbrat
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1
+    volumes:
+      - ./itbrat:/code
+      - media_volume:/code/media
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn --bind 0.0.0.0:8000 --workers 3 config.wsgi:application"
+    depends_on:
+      - db
+
   db:
     image: postgres:13
     environment:
@@ -8,24 +29,17 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 1
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data/
 
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
+  nginx:
+    image: nginx:latest
     ports:
-      - "8000:8000"
+      - "8001:8000"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
-      - db
-    environment:
-      DEBUG: 'true'
-      DB_NAME: itbrat
-      DB_USER: postgres
-      DB_PASSWORD: 1
-      DB_HOST: db
-      DB_PORT: 5432
+      - django
 
 volumes:
   postgres_data:
+  media_volume:
