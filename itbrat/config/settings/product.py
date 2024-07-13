@@ -11,7 +11,7 @@ DATABASES = {
         'NAME': 'itbrat',
         'USER': 'postgres',
         "PASSWORD": "1",
-        "HOST": "localhost",
+        "HOST": "db",
         "PORT": 5432,
     }
 }
