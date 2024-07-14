@@ -8,10 +8,10 @@ ALLOWED_HOSTS = ['*']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'itbrat',
-        'USER': 'postgres',
-        "PASSWORD": "1",
-        "HOST": "db",
-        "PORT": 5432,
+        'NAME': os.environ["DB_NAME"],
+        'USER': os.environ["DB_USER"],
+        "PASSWORD": os.environ["DB_PASSWORD"],
+        "HOST": os.environ["DB_HOST2"],
+        "PORT": os.environ["DB_PORT"],
     }
 }
