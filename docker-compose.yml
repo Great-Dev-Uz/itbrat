@@ -4,7 +4,7 @@ services:
   django:
     build: .
     ports:
-      - "80:80"
+      - "8000:8000"
     env_file:
       - .env
     volumes:
@@ -14,7 +14,7 @@ services:
     command: >
       sh -c "python manage.py migrate &&
              python manage.py collectstatic --noinput &&
-             gunicorn --bind 0.0.0.0:80 --workers 3 config.wsgi:application"
+             gunicorn --bind 0.0.0.0:8000 --workers 3 config.wsgi:application"
     depends_on:
       - db
 
@@ -28,7 +28,7 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "80:80"  # Forward port 8080 on host to port 80 in container
+      - "8000:80"  # Forward port 8080 on host to port 80 in container
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - static_volume:/code/static
