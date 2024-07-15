@@ -4,7 +4,7 @@ services:
   django:
     build: .
     ports:
-      - "8000"  # No need to expose port 8000 to the host
+      - "8000:80"  # No need to expose port 8000 to the host
     env_file:
       - .env
     volumes:
