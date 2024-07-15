@@ -4,7 +4,7 @@ services:
   django:
     build: .
     ports:
-      - "8000:80"  # No need to expose port 8000 to the host
+      - "8001:8000"  # Expose a different port to the host
     env_file:
       - .env
     volumes:
@@ -28,7 +28,7 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "8000:80"  # Forward port 80 on host to port 80 in container
+      - "8080:80"  # Forward port 80 on host to port 80 in container
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - static_volume:/code/static
