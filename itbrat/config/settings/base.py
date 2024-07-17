@@ -106,7 +106,7 @@ USE_TZ = True
 # settings.py
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/code/static/'
+STATIC_ROOT = 'static'
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "/var/www/media")
