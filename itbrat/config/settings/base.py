@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django_filters',
     'drf_spectacular',
     'drf_yasg',
+    'authen',
 
 ]
 
@@ -122,5 +123,5 @@ AUTHENTICATION_BACKENDS = [
     # 'authen.authentication.EmailOrUsernameModelBackend',
 ]
 
-# AUTH_USER_MODEL = "authen.CustomUser"
+AUTH_USER_MODEL = "authen.CustomUser"
 
