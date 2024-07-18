@@ -1,0 +1,29 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+
+          script: |
+            cd /var/www/it-brat
+            git pull
+            cd itbrat
+            source env/bin/activate
+            python3 -m pip install -r requirements.txt
+            python3 manage.py migrate
+            deactivate
+            sudo systemctl start gunicorn.socket
+            sudo systemctl enable gunicorn.socket
+            sudo systemctl daemon-reload
+            sudo systemctl restart gunicorn
+            echo "Deployed at BackEnd"
