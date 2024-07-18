@@ -14,7 +14,7 @@ schema_view = get_schema_view(
       title="IT-Brat",
       default_version='v 1.0.0',
       description="IT-Brat API",
-      terms_of_service="https://api.mineplugins.com/swagger/",
+      terms_of_service="https://api.itbratrf.ru/swagger/",
       contact=openapi.Contact(email="istamovibrohim8@gmail.com"),
       license=openapi.License(name="BSD License"),
    ),
