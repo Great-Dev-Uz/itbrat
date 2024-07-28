@@ -15,7 +15,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
 
           script: |
-            cd /var/www/it-brat
+            cd /var/www/itbrat
             git pull
             cd itbrat
             source env/bin/activate
