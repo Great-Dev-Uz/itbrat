@@ -28,7 +28,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=20, min_length=1, required=False, validators=[UniqueValidator(queryset=CustomUser.objects.all())])
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     confirm_password = serializers.CharField(write_only=True, required=True)
-    groups = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), many=True, required=False)
 
     class Meta:
         model = CustomUser
@@ -42,12 +41,13 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        groups = validated_data.pop('groups', [])
         if validated_data["password"] != validated_data["confirm_password"]:
             raise serializers.ValidationError({"error": "Those passwords don't match"})
         validated_data.pop("confirm_password")
+        buyer_group = Group.objects.get(name='buyer')
+        salesman_group = Group.objects.get(name='salesman')
         create = CustomUser.objects.create_user(**validated_data)
-        create.groups.set(groups)
+        create.groups.add(buyer_group, salesman_group)
         return create
 
 
