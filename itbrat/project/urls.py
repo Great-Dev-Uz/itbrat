@@ -9,11 +9,11 @@ from project.views import (
 
 
 urlpatterns = [
-    path('project/category/', ProjectCategoryView.as_view()),
+    path('category/project/', ProjectCategoryView.as_view()),
     path('project/', ProjectsView.as_view()),
     path('project/<int:pk>/', ProjectView.as_view()),
     # Favorite project
-    path('project/favorite/', FavoritesProjectView.as_view()),
-    path('project/favorite/<int:pk>/', FavoriteProjectView.as_view()),
+    path('fovorite/project/', FavoritesProjectView.as_view()),
+    path('favorite/project/<int:pk>/', FavoriteProjectView.as_view()),
 
 ]

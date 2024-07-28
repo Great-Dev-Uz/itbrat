@@ -29,6 +29,7 @@ urlpatterns = [
 
     path('', include('authen.urls')),
     path('', include('project.urls')),
+    path('', include('resume.urls')),
 ]
 
 if settings.DEBUG:

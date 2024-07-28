@@ -47,7 +47,7 @@ class FavoritesProject(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Проект: {self.name} - Автор: {self.owner.username}"
+        return f"Проект: {self.project.name} - Автор: {self.owner.username}"
     
     class Meta:
         db_table = "favorites_project"
