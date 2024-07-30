@@ -31,7 +31,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ["id", "username", "first_name", "last_name", "email", "groups", "password", "confirm_password"]
+        fields = ["id", "username", "first_name", "last_name", "email", "password", "confirm_password"]
 
     def validate_password(self, value):
         try:
@@ -44,10 +44,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if validated_data["password"] != validated_data["confirm_password"]:
             raise serializers.ValidationError({"error": "Those passwords don't match"})
         validated_data.pop("confirm_password")
-        buyer_group = Group.objects.get(name='buyer')
-        salesman_group = Group.objects.get(name='salesman')
         create = CustomUser.objects.create_user(**validated_data)
-        create.groups.add(buyer_group, salesman_group)
         return create
 
 

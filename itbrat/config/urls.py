@@ -30,6 +30,7 @@ urlpatterns = [
     path('', include('authen.urls')),
     path('', include('project.urls')),
     path('', include('resume.urls')),
+    path('', include('chat.urls')),
 ]
 
 if settings.DEBUG:

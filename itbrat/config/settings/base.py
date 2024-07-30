@@ -20,6 +20,8 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
+    "channels",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,6 +37,7 @@ INSTALLED_APPS = [
     'authen',
     'project',
     'resume',
+    'chat',
 
 ]
 
@@ -68,7 +71,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
-
+ASGI_APPLICATION = 'config.asgi.application'
 
 
 # Password validation
@@ -118,7 +121,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "/var/www/media")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'authen.authentication.EmailOrUsernameModelBackend',
@@ -170,3 +173,14 @@ SIMPLE_JWT = {
 }
 
 AUTHENTICATION_CLASSES = ("dj_rest_auth.authentication.AllAuthJWTAuthentication",)
+
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'ItBratrf@yandex.ru'
+EMAIL_HOST_PASSWORD = 'kkkktdgqjevwcivz'
+DEFAULT_FROM_EMAIL = 'ItBratrf@yandex.ru'
