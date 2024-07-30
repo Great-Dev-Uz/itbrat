@@ -144,6 +144,6 @@ class FavoriteProjectView(APIView):
 
     @swagger_auto_schema(tags=['Project'], responses={204:  'No Content'})
     def delete(self, request, pk):
-        favorite = FavoritesProject.objects.get(project=pk)
+        favorite = FavoritesProject.objects.get(project__id=pk)
         favorite.delete()
-        return Response({"message": "Deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message": "Deleted successfully."}, status=status.HTTP_200_OK)
