@@ -20,6 +20,7 @@ class ResumeModel(models.Model):
     hard_skills = models.JSONField(verbose_name='Hard skills', null=True, blank=True)
     soft_skills = models.JSONField(verbose_name='Soft Skills', null=True, blank=True)
     description = models.TextField(verbose_name='Описание')
+    image = models.ImageField(upload_to='resume/', null=True, blank=True)
     heading = models.ForeignKey(Heading, on_delete=models.CASCADE, verbose_name='Рубрику')
     owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Автор')
     create_at = models.DateTimeField(auto_now_add=True)

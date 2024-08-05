@@ -19,7 +19,7 @@ class ResumesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ResumeModel
-        fields = ['id', 'contact', 'experience', 'hard_skills', 'soft_skills', 'description', 'heading', 'owner', 'is_owner', 'favorite', 'create_at']
+        fields = ['id', 'image', 'contact', 'experience', 'hard_skills', 'soft_skills', 'description', 'heading', 'owner', 'is_owner', 'favorite', 'create_at']
 
     def get_is_owner(self, obj):
         request = self.context.get('request').user
@@ -39,7 +39,7 @@ class ResumeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ResumeModel
-        fields = ['id', 'contact', 'experience', 'hard_skills', 'soft_skills', 'description', 'heading', 'owner', 'create_at']
+        fields = ['id', 'image', 'contact', 'experience', 'hard_skills', 'soft_skills', 'description', 'heading', 'owner', 'create_at']
 
 
     def create(self, validated_data):
@@ -62,6 +62,11 @@ class ResumeSerializer(serializers.ModelSerializer):
         instance.experience = validated_data.get('experience', instance.experience)
         instance.description = validated_data.get('description', instance.description)
         instance.heading = validated_data.get('heading', instance.heading)
+
+        if instance.image == None:
+            instance.image = self.context.get("image")
+        else:
+            instance.image = validated_data.get("image", instance.image)
 
         instance.hard_skills = hard_skills
         instance.soft_skills = soft_skills
