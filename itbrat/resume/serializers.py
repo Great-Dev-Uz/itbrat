@@ -34,6 +34,7 @@ class ResumesSerializer(serializers.ModelSerializer):
 
 
 class ResumeSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(max_length=None, allow_empty_file=False, allow_null=False, use_url=False, required=False,)
     hard_skills = serializers.ListField(child=serializers.CharField(), write_only=True)
     soft_skills = serializers.ListField(child=serializers.CharField(), write_only=True)
 

@@ -144,6 +144,12 @@ class FavoriteProjectView(APIView):
 
     @swagger_auto_schema(tags=['Project'], responses={204:  'No Content'})
     def delete(self, request, pk):
-        favorite = FavoritesProject.objects.get(project__id=pk)
-        favorite.delete()
-        return Response({"message": "Deleted successfully."}, status=status.HTTP_200_OK)
+        try:
+            favorite = FavoritesProject.objects.get(owner=request.user, project__id=pk)
+            favorite.delete()
+            return Response({"message": "Deleted successfully."}, status=status.HTTP_200_OK)
+        except FavoritesProject.MultipleObjectsReturned:
+            # Handle multiple instances returned, possibly log or raise an error
+            return Response({"error": "Multiple favorite projects found. Contact support."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except FavoritesProject.DoesNotExist:
+            return Response({"error": "Favorite project not found."}, status=status.HTTP_404_NOT_FOUND)
