@@ -26,11 +26,9 @@ class ResumesSerializer(serializers.ModelSerializer):
         return obj.owner == request
     
     def get_favorite(self, obj):
-        user = self.context.get("owner")
-        user_favorities = FavoritesResume.objects.filter(owner=user)
-        if user_favorities.filter(project__id=obj.id).exists():
-            return True
-        return False
+        request_user = self.context['request'].user
+        user_favorites = FavoritesResume.objects.filter(owner=request_user, resume=obj)
+        return user_favorites.exists()
 
 
 class ResumeSerializer(serializers.ModelSerializer):
