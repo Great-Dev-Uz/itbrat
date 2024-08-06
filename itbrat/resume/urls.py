@@ -5,11 +5,13 @@ from resume.views import (
     ResumeView,
     FavoritesResumeView,
     FavoriteResumeView,
+    ResumeOwnerView,
 )
 
 
 urlpatterns = [
     path('heading/resume/', HeadingView.as_view()),
+    path('resume/owner/', ResumeOwnerView.as_view()),
     path('resume/', ResumesView.as_view()),
     path('resume/<int:pk>/', ResumeView.as_view()),
     # Favorite Resume

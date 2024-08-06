@@ -33,6 +33,15 @@ class HeadingView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class ResumeOwnerView(APIView):
+
+    @swagger_auto_schema(tags=['Resume'], responses={200: ResumesSerializer(many=True)})
+    def get(self, request):
+        instance = ResumeModel.objects.filter(owner=request.user).order_by('id')
+        serializer = ResumesSerializer(instance, many=True, context={'request':request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 class ResumesView(APIView):
     renderer_classes = [UserRenderers]
     authentication_classes = [JWTAuthentication]
