@@ -26,4 +26,9 @@ jobs:
             sudo systemctl enable gunicorn.socket
             sudo systemctl daemon-reload
             sudo systemctl restart gunicorn
+            sudo systemctl start chat.socket
+            sudo systemctl enable chat.socket
+            sudo systemctl daemon-reload
+            sudo systemctl restart chat
+            sudo systemctl restart nginx
             echo "Deployed at BackEnd"
