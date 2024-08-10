@@ -68,7 +68,7 @@ class StartConversationView(APIView):
         conversation = Conversation.objects.filter(Q(initiator=request.user, receiver=participant) |
                                                    Q(initiator=participant, receiver=request.user))
         if conversation.exists():
-            return Response({"message": "Разговор уже существует"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Разговор уже существует", "id": conversation[0].id}, status=status.HTTP_400_BAD_REQUEST)
         else:
             conversation = Conversation.objects.create(initiator=request.user, receiver=participant)
             return Response(ConversationSerializer(instance=conversation).data, status=status.HTTP_200_OK)
