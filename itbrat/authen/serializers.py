@@ -68,11 +68,10 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 class ResumesSer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
-    favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = ResumeModel
-        fields = ['id', 'image', 'contact', 'experience', 'hard_skills', 'soft_skills', 'description', 'heading', 'owner', 'is_owner', 'favorite', 'create_at']
+        fields = ['id', 'image', 'contact', 'experience', 'hard_skills', 'soft_skills', 'description', 'heading', 'owner', 'is_owner', 'create_at']
 
     def get_is_owner(self, obj):
         request = self.context.get('request').user
