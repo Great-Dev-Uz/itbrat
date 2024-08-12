@@ -13,8 +13,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model, authenticate
 
 from authen.models import CustomUser
-
-
+from resume.models import ResumeModel
 
 class UserGroupsSerializer(serializers.ModelSerializer):
 
@@ -67,14 +66,26 @@ class UserLoginSerializer(serializers.ModelSerializer):
         return data
 
 
+class ResumesSer(serializers.ModelSerializer):
+    is_owner = serializers.SerializerMethodField()
+    favorite = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ResumeModel
+        fields = ['id', 'image', 'contact', 'experience', 'hard_skills', 'soft_skills', 'description', 'heading', 'owner', 'is_owner', 'favorite', 'create_at']
+
+    def get_is_owner(self, obj):
+        request = self.context.get('request').user
+        return obj.owner == request
+
 class UserInformationSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(max_length=None, use_url=True)
     groups = UserGroupsSerializer(many=True, read_only=True)
-
+    resume = ResumesSer(many=True)
 
     class Meta:
         model = CustomUser
-        fields = ["id", "first_name", "last_name", "email", "groups", "avatar"]
+        fields = ["id", "first_name", "last_name", "email", "groups", "avatar", "resume"]
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):

@@ -22,7 +22,7 @@ class ResumeModel(models.Model):
     description = models.TextField(verbose_name='Описание')
     image = models.ImageField(upload_to='resume/', null=True, blank=True)
     heading = models.ForeignKey(Heading, on_delete=models.CASCADE, verbose_name='Рубрику')
-    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Автор')
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Автор', related_name='resume')
     create_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:

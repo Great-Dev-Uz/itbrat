@@ -5,7 +5,8 @@ from authen.views import (UserGroupsView,
                           UserProfileView,
                           change_password,
                           RequestPasswordRestEmail,
-                          SetNewPasswordView
+                          SetNewPasswordView,
+                          UserGetView,
                         )
 
 urlpatterns = [
@@ -13,6 +14,7 @@ urlpatterns = [
     path('user/register/', UserRegisterView.as_view()),
     path('user/login/', UserLoginView.as_view()),
     path('user/profile/', UserProfileView.as_view()),
+    path('user/<int:pk>/', UserGetView.as_view()),
     # Passwordd
     path('password/change/', change_password),
     path('password/rest/', RequestPasswordRestEmail.as_view()),

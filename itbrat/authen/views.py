@@ -174,3 +174,15 @@ class SetNewPasswordView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         return success_response("success.")
+    
+
+class UserGetView(APIView):
+    render_classes = [UserRenderers]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsLogin]
+
+    @swagger_auto_schema(tags=['Auth'], responses={200: UserInformationSerializer(many=True)})
+    def get(self, request, pk):
+        instance = CustomUser.objects.filter(id=pk)
+        serializer = UserInformationSerializer(instance, many=True, context={"request": request})
+        return success_response(serializer.data)
