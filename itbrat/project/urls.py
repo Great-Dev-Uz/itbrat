@@ -1,6 +1,7 @@
 from django.urls import path
 from project.views import (
     ProjectCategoryView,
+    ProjectCategoryGetView,
     ProjectsView,
     ProjectView,
     FavoritesProjectView,
@@ -10,6 +11,7 @@ from project.views import (
 
 urlpatterns = [
     path('category/project/', ProjectCategoryView.as_view()),
+    path('category/<int:pk>/project/', ProjectCategoryGetView.as_view()),
     path('project/', ProjectsView.as_view()),
     path('project/<int:pk>/', ProjectView.as_view()),
     # Favorite project

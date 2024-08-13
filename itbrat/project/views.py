@@ -13,7 +13,7 @@ from utils.permissions import IsLogin
 from utils.renderers import UserRenderers
 from utils.pagination import CustomPagination
 
-from project.filter import ProjectFilter
+from project.filter import ProjectFilter, FavoriteFilter
 from project.models import CategoriyaProject, Project, FavoritesProject
 from project.serializers import (
     CategoryProjectSerializer,
@@ -32,6 +32,36 @@ class ProjectCategoryView(APIView):
         instance = CategoriyaProject.objects.all().order_by('id')
         serializer = CategoryProjectSerializer(instance, many=True, context={'request':request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ProjectCategoryGetView(APIView):
+    ''' Project Category '''
+
+    renderer_classes = [UserRenderers]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsLogin]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ProjectFilter
+    pagination_class = CustomPagination
+
+    @swagger_auto_schema(
+        tags=['Project'],
+        manual_parameters=[
+            openapi.Parameter('name', openapi.IN_QUERY, description="Filter by name", type=openapi.TYPE_STRING),
+            openapi.Parameter('page', openapi.IN_QUERY, description="Page number", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('limit', openapi.IN_QUERY, description="Number of items per page", type=openapi.TYPE_INTEGER)
+        ],
+        responses={200: ProjectsSerializer(many=True)}
+    )
+    def get(self, request, pk):
+        queryset  = Project.objects.filter(category=pk).order_by('-id')
+        filter_backend = DjangoFilterBackend()
+        filtered_queryset = filter_backend.filter_queryset(request, queryset, self)
+
+        # Apply pagination
+        paginator = self.pagination_class()
+        page = paginator.paginate_queryset(filtered_queryset, request)
+        serializer = ProjectsSerializer(page, many=True, context={'request': request, 'owner':request.user})
+        return paginator.get_paginated_response(serializer.data)
 
 
 class ProjectsView(APIView):
@@ -103,19 +133,26 @@ class FavoritesProjectView(APIView):
     ''' Favorites Project View '''
     renderer_classes = [UserRenderers]
     authentication_classes = [JWTAuthentication]
+    filter_backends = [DjangoFilterBackend]
     permission_classes = [IsLogin]
+    filterset_class = FavoriteFilter
     pagination_class = CustomPagination
 
     @swagger_auto_schema(
         tags=['Project'],
         manual_parameters=[
             openapi.Parameter('page', openapi.IN_QUERY, description="Page number", type=openapi.TYPE_INTEGER),
-            openapi.Parameter('limit', openapi.IN_QUERY, description="Number of items per page", type=openapi.TYPE_INTEGER)
+            openapi.Parameter('limit', openapi.IN_QUERY, description="Number of items per page", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('project_name', openapi.IN_QUERY, description="Project name", type=openapi.TYPE_STRING)
         ],
         responses={200: FavoritesProjectSerializer(many=True)}
     )
     def get(self, request):
         instance = FavoritesProject.objects.filter(owner=request.user).order_by('-id')
+        filterset = FavoriteFilter(request.GET, queryset=instance)
+        if filterset.is_valid():
+            instance = filterset.qs
+
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(instance, request)
         serializer = FavoritesProjectSerializer(page, many=True, context={'request': request})

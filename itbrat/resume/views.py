@@ -13,7 +13,7 @@ from utils.permissions import IsLogin
 from utils.renderers import UserRenderers
 from utils.pagination import CustomPagination
 
-from resume.filter import ResumetFilter
+from resume.filter import ResumetFilter, FavoriteFilter
 from resume.models import Heading, ResumeModel, FavoritesResume
 from resume.serializers import (
     HeadingSerializer,
@@ -109,21 +109,28 @@ class FavoritesResumeView(APIView):
     renderer_classes = [UserRenderers]
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsLogin]
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = FavoriteFilter
     pagination_class = CustomPagination
 
     @swagger_auto_schema(
         tags=['Resume'],
         manual_parameters=[
             openapi.Parameter('page', openapi.IN_QUERY, description="Page number", type=openapi.TYPE_INTEGER),
-            openapi.Parameter('limit', openapi.IN_QUERY, description="Number of items per page", type=openapi.TYPE_INTEGER)
+            openapi.Parameter('limit', openapi.IN_QUERY, description="Number of items per page", type=openapi.TYPE_INTEGER),
+            openapi.Parameter('resume_name', openapi.IN_QUERY, description="Resume name", type=openapi.TYPE_STRING)
         ],
         responses={200: FavroitesResumeSerializer(many=True)}
     )
     def get(self, request):
         instance = FavoritesResume.objects.filter(owner=request.user).order_by('-id')
+        filterset = FavoriteFilter(request.GET, queryset=instance)
+        if filterset.is_valid():
+            instance = filterset.qs
+
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(instance, request)
-        serializer = FavroitesResumeSerializer(page, many=True, context={'request': request})
+        serializer = FavroitesResumeSerializer(page, many=True, context={'requ est': request})
         return paginator.get_paginated_response(serializer.data)
     
     @swagger_auto_schema(tags=['Resume'], request_body=FavroiteResumeSerializer)
