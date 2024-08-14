@@ -130,7 +130,7 @@ class FavoritesResumeView(APIView):
 
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(instance, request)
-        serializer = FavroitesResumeSerializer(page, many=True, context={'requ est': request})
+        serializer = FavroitesResumeSerializer(page, many=True, context={'request': request})
         return paginator.get_paginated_response(serializer.data)
     
     @swagger_auto_schema(tags=['Resume'], request_body=FavroiteResumeSerializer)
