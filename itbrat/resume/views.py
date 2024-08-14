@@ -53,7 +53,7 @@ class ResumesView(APIView):
     @swagger_auto_schema(
         tags=['Resume'],
         manual_parameters=[
-            openapi.Parameter('name', openapi.IN_QUERY, description="Filter by name", type=openapi.TYPE_STRING),
+            openapi.Parameter('resume_owner', openapi.IN_QUERY, description="Filter by name", type=openapi.TYPE_STRING),
             openapi.Parameter('page', openapi.IN_QUERY, description="Page number", type=openapi.TYPE_INTEGER),
             openapi.Parameter('limit', openapi.IN_QUERY, description="Number of items per page", type=openapi.TYPE_INTEGER)
         ],
@@ -118,7 +118,7 @@ class FavoritesResumeView(APIView):
         manual_parameters=[
             openapi.Parameter('page', openapi.IN_QUERY, description="Page number", type=openapi.TYPE_INTEGER),
             openapi.Parameter('limit', openapi.IN_QUERY, description="Number of items per page", type=openapi.TYPE_INTEGER),
-            openapi.Parameter('resume_name', openapi.IN_QUERY, description="Resume name", type=openapi.TYPE_STRING)
+            openapi.Parameter('resume_owner', openapi.IN_QUERY, description="Resume name", type=openapi.TYPE_STRING)
         ],
         responses={200: FavroitesResumeSerializer(many=True)}
     )
