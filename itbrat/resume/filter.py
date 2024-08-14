@@ -1,5 +1,6 @@
 from django_filters import rest_framework as filters
 from resume.models import ResumeModel, FavoritesResume
+from django.db.models import Q
 
 
 class ResumetFilter(filters.FilterSet):
@@ -11,8 +12,14 @@ class ResumetFilter(filters.FilterSet):
 
 
 class FavoriteFilter(filters.FilterSet):
-    resume_name = filters.CharFilter(field_name='resume__name', lookup_expr='icontains')
+    resume_owner = filters.CharFilter(method='filter_by_full_name')
 
     class Meta:
         model = FavoritesResume
-        fields = ['resume_name'] 
+        fields = ['resume_owner'] 
+    
+    def filter_by_full_name(self, queryset, name, value):
+        return queryset.filter(
+            Q(resume__owner__first_name__icontains=value) |
+            Q(resume__owner__last_name__icontains=value)
+        )
