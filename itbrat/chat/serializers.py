@@ -64,15 +64,14 @@ class MessageListSerializer(serializers.ModelSerializer):
         fields = ['id', 'sender', 'text', 'info', 'timestamp', 'sender_type']
     
     def get_sender_type(self, obj):
-        user = self.context['request']
+        user = self.context['request'].user
         conversation = obj.conversation
-        # print(conversation.initiator_id)
-        if user == obj.sender_id:
-            if user == conversation.initiator_id:
+        if user.id == obj.sender_id:
+            if user.id == conversation.initiator_id:
                 return 'initiator'
-            elif user == conversation.receiver_id:
+            elif user.id == conversation.receiver_id:
                 return 'initiator'
-        return 'receiver'
+        return 'resiver'
 
 
 class ConversationSerializer(serializers.ModelSerializer):

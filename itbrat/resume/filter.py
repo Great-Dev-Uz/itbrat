@@ -11,9 +11,10 @@ class ResumetFilter(filters.FilterSet):
         fields = ['resume_owner'] 
     
     def filter_by_full_name(self, queryset, name, value):
+        # Filter by owner's first name or last name
         return queryset.filter(
-            Q(resume__owner__first_name__icontains=value) |
-            Q(resume__owner__last_name__icontains=value)
+            Q(owner__first_name__icontains=value) |
+            Q(owner__last_name__icontains=value)
         )
 
 

@@ -53,21 +53,21 @@ class ResumesView(APIView):
     @swagger_auto_schema(
         tags=['Resume'],
         manual_parameters=[
-            openapi.Parameter('resume_owner', openapi.IN_QUERY, description="Filter by name", type=openapi.TYPE_STRING),
+            openapi.Parameter('resume_owner', openapi.IN_QUERY, description="Filter by owner's name", type=openapi.TYPE_STRING),
             openapi.Parameter('page', openapi.IN_QUERY, description="Page number", type=openapi.TYPE_INTEGER),
             openapi.Parameter('limit', openapi.IN_QUERY, description="Number of items per page", type=openapi.TYPE_INTEGER)
         ],
         responses={200: ResumesSerializer(many=True)}
     )
     def get(self, request):
-        queryset  = ResumeModel.objects.all().order_by('-id')
+        queryset = ResumeModel.objects.all().order_by('-id')
         filter_backend = DjangoFilterBackend()
         filtered_queryset = filter_backend.filter_queryset(request, queryset, self)
 
         # Apply pagination
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(filtered_queryset, request)
-        serializer = ResumesSerializer(page, many=True, context={'request': request, 'owner':request.user})
+        serializer = ResumesSerializer(page, many=True, context={'request': request, 'owner': request.user})
         return paginator.get_paginated_response(serializer.data)
     
     @swagger_auto_schema(tags=['Resume'], request_body=ResumeSerializer)
