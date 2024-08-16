@@ -13,7 +13,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model, authenticate
 
 from authen.models import CustomUser
-from resume.models import ResumeModel
+from resume.models import ResumeModel, Heading
 
 class UserGroupsSerializer(serializers.ModelSerializer):
 
@@ -66,8 +66,15 @@ class UserLoginSerializer(serializers.ModelSerializer):
         return data
 
 
+class HeadingSeri(serializers.ModelSerializer):
+
+    class Meta:
+        model = Heading
+        fields = ['id', 'name']
+
 class ResumesSer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
+    heading = HeadingSeri(read_only=True)
 
     class Meta:
         model = ResumeModel

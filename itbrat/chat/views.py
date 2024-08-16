@@ -130,13 +130,31 @@ class ConversationView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsLogin]
 
+    @swagger_auto_schema(
+        tags=['chat'],
+        manual_parameters=[
+            openapi.Parameter('full_name', openapi.IN_QUERY, description="full_name", type=openapi.TYPE_STRING),
+        ],
+        responses={200: ConversationListSerializer(many=True)}
+    )
     def get(self, request):
+        full_name = request.query_params.get('full_name')
 
-        conversation_list = Conversation.objects.filter(Q(initiator=request.user.id) |
-                                                        Q(receiver=request.user.id))
-        serializer = ConversationListSerializer(instance=conversation_list, many=True, context={"request": request})
-        # serializer = super().page(conversation_list, ConversationListSerializer, request)
+        # Hozirgi foydalanuvchi ishtirokidagi suhbatlar asosiy filtri
+        conversation_list = Conversation.objects.filter(
+            Q(initiator=request.user) | Q(receiver=request.user)
+        )
 
+        # Agar full_name mavjud bo'lsa, uni first_name va last_name da qidirish
+        if full_name:
+            conversation_list = conversation_list.filter(
+                Q(initiator__first_name__icontains=full_name) | 
+                Q(initiator__last_name__icontains=full_name) |
+                Q(receiver__first_name__icontains=full_name) | 
+                Q(receiver__last_name__icontains=full_name)
+            )
+
+        serializer = ConversationListSerializer(conversation_list, many=True, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
