@@ -85,7 +85,7 @@ class ConversationSerializer(serializers.ModelSerializer):
         fields = ['id', 'initiator', 'receiver', 'messages', 'sender_type']
     
     def get_sender_type(self, obj):
-        user = self.context.get('request')
+        user = self.context['request']
         if user:
             if obj.initiator == user:
                 return obj.receiver 

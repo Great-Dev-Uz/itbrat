@@ -88,6 +88,7 @@ class UserInformationSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(max_length=None, use_url=True)
     groups = UserGroupsSerializer(many=True, read_only=True)
     resume = ResumesSer(many=True)
+    status = serializers.CharField(source='get_status_display')
 
     class Meta:
         model = CustomUser
