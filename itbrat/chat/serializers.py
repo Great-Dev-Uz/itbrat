@@ -45,12 +45,11 @@ class ConversationListSerializer(serializers.ModelSerializer):
 
     def get_sender_type(self, obj):
         user = self.context.get('request')
-        if user:
-            
-            if obj.initiator == user:
-                return obj.receiver 
-            elif obj.receiver == user:
-                return obj.initiator
+        if user.user:
+            if obj.initiator == user.user:
+                return UserInformationSerializer(obj.receiver).data
+            elif obj.receiver == user.user:
+                return UserInformationSerializer(obj.initiator).data
         return None
 
     
@@ -64,6 +63,7 @@ class MessageListSerializer(serializers.ModelSerializer):
         fields = ['id', 'sender', 'text', 'info', 'timestamp', 'sender_type']
     
     def get_sender_type(self, obj):
+        user = self.context['request']
         user = self.context['request'].user
         conversation = obj.conversation
         if user.id == obj.sender_id:
@@ -86,7 +86,6 @@ class ConversationSerializer(serializers.ModelSerializer):
     
     def get_sender_type(self, obj):
         user = self.context.get('request')
-        print(user)
         if user:
             if obj.initiator == user:
                 return obj.receiver 

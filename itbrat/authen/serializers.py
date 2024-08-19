@@ -91,7 +91,7 @@ class UserInformationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ["id", "first_name", "last_name", "email", "groups", "avatar", "resume"]
+        fields = ["id", "first_name", "last_name", "email", "groups", "avatar", "resume" "status"]
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
@@ -102,10 +102,11 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ["id", "first_name", "last_name", "email", "groups", "avatar"]
+        fields = ["id", "first_name", "last_name", "email", "groups", "avatar", "status"]
 
     def update(self, instance, validated_data):
         instance.username = validated_data.get("username", instance.username)
+        instance.status = validated_data.get("status", instance.status)
         if instance.avatar == None:
             instance.avatar = self.context.get("avatar")
         else:
