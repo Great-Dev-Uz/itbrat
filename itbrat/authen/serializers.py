@@ -73,16 +73,11 @@ class HeadingSeri(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class ResumesSer(serializers.ModelSerializer):
-    is_owner = serializers.SerializerMethodField()
     heading = HeadingSeri(read_only=True)
 
     class Meta:
         model = ResumeModel
-        fields = ['id', 'image', 'contact', 'experience', 'hard_skills', 'soft_skills', 'description', 'heading', 'owner', 'is_owner', 'create_at']
-
-    def get_is_owner(self, obj):
-        request = self.context.get('request').user
-        return obj.owner == request
+        fields = ['id', 'image', 'contact', 'experience', 'hard_skills', 'soft_skills', 'description', 'heading', 'owner', 'create_at']
 
 class UserInformationSerializer(serializers.ModelSerializer):
     avatar = serializers.ImageField(max_length=None, use_url=True)

@@ -45,10 +45,10 @@ class ConversationListSerializer(serializers.ModelSerializer):
 
     def get_sender_type(self, obj):
         user = self.context['request']
-        if user.user:
-            if obj.initiator == user.user:
+        if user:
+            if obj.initiator == user:
                 return UserInformationSerializer(obj.receiver).data
-            elif obj.receiver == user.user:
+            elif obj.receiver == user:
                 return UserInformationSerializer(obj.initiator).data
         return None
 
