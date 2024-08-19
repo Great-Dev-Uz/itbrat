@@ -44,13 +44,13 @@ class ConversationListSerializer(serializers.ModelSerializer):
         fields = ['id', 'initiator', 'receiver', 'sender_type']
 
     def get_sender_type(self, obj):
-        user = self.context['request']
+        user = self.context['request'].user  # Correctly access the user
         if user:
             if obj.initiator == user:
                 return UserInformationSerializer(obj.receiver).data
             elif obj.receiver == user:
                 return UserInformationSerializer(obj.initiator).data
-        return None
+        return 'initiator'
 
     
 
