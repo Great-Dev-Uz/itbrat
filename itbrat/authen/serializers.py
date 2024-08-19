@@ -91,7 +91,7 @@ class UserInformationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ["id", "first_name", "last_name", "email", "groups", "avatar", "resume" "status"]
+        fields = ["id", "first_name", "last_name", "email", "groups", "avatar", "resume", "status"]
 
 
 class UserUpdateSerializer(serializers.ModelSerializer):
