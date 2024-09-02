@@ -1,5 +1,5 @@
 from django.contrib import admin
-from chat.models import Conversation, ChatMessage, Feedback, Question
+from chat.models import Conversation, ChatMessage, Feedback, Question, Subscribe
 
 admin.site.register(Conversation)
 admin.site.register(ChatMessage)
@@ -24,3 +24,14 @@ class QuestionAdmin(admin.ModelAdmin):
     list_filter = ['text', 'create_at']
 
 admin.site.register(Question,  QuestionAdmin)
+
+
+class SubscribeAdmin(admin.ModelAdmin):
+    readonly_fields = [
+        'email'
+    ]
+    list_display = ['id', 'email', 'create_at']
+    search_fields = ['email']
+    list_filter = ['email', 'create_at']
+
+admin.site.register(Subscribe,  SubscribeAdmin)

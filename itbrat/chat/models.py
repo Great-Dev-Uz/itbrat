@@ -58,3 +58,16 @@ class Question(models.Model):
         db_table = "feedback"
         verbose_name = "ЗАДАТЬ ВОПРОС"
         verbose_name_plural = "ЗАДАТЬ ВОПРОС"
+
+
+class Subscribe(models.Model):
+    email = models.EmailField(verbose_name='E-mail')
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name='Создать в')
+
+    def __str__(self):
+        return self.email
+    
+    class Meta:
+        db_table = "subscrible"
+        verbose_name = "Подпишись"
+        verbose_name_plural = "Подпишись"

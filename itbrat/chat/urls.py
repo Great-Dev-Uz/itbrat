@@ -4,9 +4,9 @@ from chat.views import (
     StartConversationView,
     ConversationView,
     GetConversationView,
-
     FeedbackView,
     QuestionView,
+    SubscribeView,
 )
 
 urlpatterns = [
@@ -19,5 +19,6 @@ urlpatterns = [
 
     path('feed_back/', FeedbackView.as_view()),
     path('question/', QuestionView.as_view()),
+    path('subscribe/', SubscribeView.as_view()),
 
 ]

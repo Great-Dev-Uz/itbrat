@@ -20,7 +20,7 @@ from utils.response import success_response, success_created_response, bad_reque
 from authen.models import CustomUser
 from authen.serializers import UserInformationSerializer
 
-from chat.models import Conversation, ChatMessage, Feedback, Question
+from chat.models import Conversation, ChatMessage, Feedback, Question, Subscribe
 from chat.serializers import (
     ConversationListSerializer,
     ConversationSerializer,
@@ -215,6 +215,36 @@ class QuestionView(APIView):
          # Send email
         subject = 'Получен новый вопрос'
         message = f'Вопрос: {text}'
+        from_email = 'ItBratrf@yandex.ru'  # Your from email
+        recipient_list = ['ItBratrf@yandex.ru']  # Recipient list
+
+        try:
+            send_mail(subject, message, from_email, recipient_list)
+            return Response({'message': 'Вопрос получен и электронное письмо отправлено'}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'message': 'Не удалось отправить электронное письмо', 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class SubscribeView(APIView):
+
+    @swagger_auto_schema(
+        tags=['Other'],
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties={
+                'email': openapi.Schema(type=openapi.TYPE_STRING, description='email'),
+            }
+        )
+    )
+    def post(self, request):
+        email = request.data.get('email', '')
+        if not email:
+            return Response({'message': 'Text cannot be empty'}, status=status.HTTP_400_BAD_REQUEST)
+        concat_user = Subscribe(email=email)
+        concat_user.save()
+         # Send email
+        subject = 'Получен новый вопрос'
+        message = f'Подпишись: {email}'
         from_email = 'ItBratrf@yandex.ru'  # Your from email
         recipient_list = ['ItBratrf@yandex.ru']  # Recipient list
 
