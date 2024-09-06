@@ -3,7 +3,7 @@ from rest_framework import serializers
 from authen.models import CustomUser
 from authen.serializers import UserInformationSerializer
 
-from chat.models import Conversation, ChatMessage
+from chat.models import Conversation, ChatMessage, Faq
 
 
 class MessagesSerializer(serializers.ModelSerializer):
@@ -92,3 +92,9 @@ class ConversationSerializer(serializers.ModelSerializer):
             elif obj.receiver == user:
                 return UserInformationSerializer(obj.initiator).data
         return 'initiator'
+    
+class FaqSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Faq
+        fields = ['id', 'title', 'description'] 

@@ -71,3 +71,16 @@ class Subscribe(models.Model):
         db_table = "subscrible"
         verbose_name = "Подпишись"
         verbose_name_plural = "Подпишись"
+
+
+class Faq(models.Model):
+    title = models.CharField(max_length=250, verbose_name='Заголовок')
+    description = models.TextField(verbose_name='Описание')
+
+    def __str__(self):
+        return self.title
+    
+    class Meta:
+        db_table = "faq"
+        verbose_name = "Faq"
+        verbose_name_plural = "Faq"

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from chat.models import Conversation, ChatMessage, Feedback, Question, Subscribe
+from chat.models import Conversation, ChatMessage, Feedback, Question, Subscribe, Faq
 
 admin.site.register(Conversation)
 admin.site.register(ChatMessage)
@@ -35,3 +35,5 @@ class SubscribeAdmin(admin.ModelAdmin):
     list_filter = ['email', 'create_at']
 
 admin.site.register(Subscribe,  SubscribeAdmin)
+
+admin.site.register(Faq)

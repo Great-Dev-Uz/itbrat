@@ -20,12 +20,13 @@ from utils.response import success_response, success_created_response, bad_reque
 from authen.models import CustomUser
 from authen.serializers import UserInformationSerializer
 
-from chat.models import Conversation, ChatMessage, Feedback, Question, Subscribe
+from chat.models import Conversation, ChatMessage, Feedback, Question, Subscribe, Faq
 from chat.serializers import (
     ConversationListSerializer,
     ConversationSerializer,
     MessagesSerializer,
-    MessageListSerializer
+    MessageListSerializer,
+    FaqSerializer,
 )
 
 
@@ -253,3 +254,12 @@ class SubscribeView(APIView):
             return Response({'message': 'Вопрос получен и электронное письмо отправлено'}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'message': 'Не удалось отправить электронное письмо', 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+class FaqView(APIView):
+
+    @swagger_auto_schema(tags=['Other'], responses={200: FaqSerializer(many=True)})
+    def get(self, request):
+        instanse = Faq.objects.all()
+        serializer = FaqSerializer(instanse, many=True, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
