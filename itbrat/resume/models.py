@@ -47,3 +47,8 @@ class FavoritesResume(models.Model):
         db_table = "favorites_resume"
         verbose_name = "Избранно резюме"
         verbose_name_plural = "Избранно резюме"
+
+
+class NotificationResume(models.Model):
+    favorite = models.ForeignKey(FavoritesResume, on_delete=models.CASCADE, null=True, blank=True)
+    is_read = models.BooleanField(default=False)

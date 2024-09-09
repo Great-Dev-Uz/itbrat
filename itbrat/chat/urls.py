@@ -8,6 +8,10 @@ from chat.views import (
     QuestionView,
     SubscribeView,
     FaqView,
+    NotificationChatCountView,
+    NotificationsChatView,
+    NotificationChatView,
+
 )
 
 urlpatterns = [
@@ -22,5 +26,9 @@ urlpatterns = [
     path('question/', QuestionView.as_view()),
     path('subscribe/', SubscribeView.as_view()),
     path('faq/', FaqView.as_view()),
+    # Chat Notification
+    path('chat/notification/count/', NotificationChatCountView.as_view()),
+    path('chat/notification/', NotificationsChatView.as_view()),
+    path('chat/notification/<int:pk>/', NotificationChatView.as_view()),
 
 ]

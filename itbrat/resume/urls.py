@@ -6,6 +6,9 @@ from resume.views import (
     FavoritesResumeView,
     FavoriteResumeView,
     ResumeOwnerView,
+    NotificationsResumeView,
+    NotificationResumeView,
+    NotificationResumeCountView,
 )
 
 
@@ -17,5 +20,9 @@ urlpatterns = [
     # Favorite Resume
     path('favorite/resume/', FavoritesResumeView.as_view()),
     path('favorite/resume/<int:pk>/', FavoriteResumeView.as_view()),
+    # Notfiation
+    path('resume/notification/', NotificationsResumeView.as_view()),
+    path('resume/notification/<int:pk>/', NotificationResumeView.as_view()),
+    path('resume/notification/count/', NotificationResumeCountView.as_view()),
 
 ]

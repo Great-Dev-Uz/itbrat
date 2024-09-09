@@ -1,5 +1,5 @@
 from django.contrib import admin
-from chat.models import Conversation, ChatMessage, Feedback, Question, Subscribe, Faq
+from chat.models import Conversation, ChatMessage, Feedback, Question, Subscribe, Faq, NotificationChat
 
 admin.site.register(Conversation)
 admin.site.register(ChatMessage)
@@ -37,3 +37,4 @@ class SubscribeAdmin(admin.ModelAdmin):
 admin.site.register(Subscribe,  SubscribeAdmin)
 
 admin.site.register(Faq)
+admin.site.register(NotificationChat)

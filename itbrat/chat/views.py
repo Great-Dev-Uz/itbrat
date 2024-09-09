@@ -20,13 +20,14 @@ from utils.response import success_response, success_created_response, bad_reque
 from authen.models import CustomUser
 from authen.serializers import UserInformationSerializer
 
-from chat.models import Conversation, ChatMessage, Feedback, Question, Subscribe, Faq
+from chat.models import Conversation, ChatMessage, Feedback, Question, Subscribe, Faq, NotificationChat
 from chat.serializers import (
     ConversationListSerializer,
     ConversationSerializer,
     MessagesSerializer,
     MessageListSerializer,
     FaqSerializer,
+    NotificationChatSerializer,
 )
 
 
@@ -263,3 +264,50 @@ class FaqView(APIView):
         instanse = Faq.objects.all()
         serializer = FaqSerializer(instanse, many=True, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class NotificationChatCountView(APIView):
+    renderer_classes = [UserRenderers]
+    authentication_classes = [JWTAuthentication]    
+    permission_classes = [IsLogin]
+
+    @swagger_auto_schema(tags=['chat'], responses={200: NotificationChatSerializer(many=True)})
+    def get(self, request):
+        user = request.user
+        notifications = NotificationChat.objects.filter(
+            receiver=user, is_read=False
+        ).count()
+        
+        return Response({'count': notifications}, status=status.HTTP_200_OK)          
+
+
+class NotificationsChatView(APIView):
+    authentication_classes = [JWTAuthentication]    
+    permission_classes = [IsLogin]
+
+    @swagger_auto_schema(tags=['chat'], responses={200: NotificationChatSerializer(many=True)})
+    def get(self, request):
+        user = request.user
+        notifications = NotificationChat.objects.filter(receiver=user).order_by('-id')
+        notifications.update(is_read=True)
+
+        serializer = NotificationChatSerializer(notifications, many=True, context={'request': request})
+        return Response({'notification': serializer.data}, status=status.HTTP_200_OK)
+
+
+class NotificationChatView(APIView):
+    renderer_classes = [UserRenderers]
+    authentication_classes = [JWTAuthentication]    
+    permission_classes = [IsLogin]
+
+    @swagger_auto_schema(tags=['chat'], responses={200: NotificationChatSerializer(many=True)})
+    def get(self, request, pk):
+        queryset = get_object_or_404(NotificationChat, id=pk)
+        serializer = NotificationChatSerializer(queryset, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(tags=['chat'], responses={204:  'No Content'})
+    def delete(self, request, pk):
+        notification = NotificationChat.objects.get(id=pk)
+        notification.delete()
+        return Response({"message": "Deleted successfully."}, status=status.HTTP_200_OK)

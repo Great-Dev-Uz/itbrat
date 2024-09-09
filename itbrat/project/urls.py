@@ -6,6 +6,9 @@ from project.views import (
     ProjectView,
     FavoritesProjectView,
     FavoriteProjectView,
+    NotificationsView,
+    NotificationView,
+    NotificationCountView,
 )
 
 
@@ -17,5 +20,9 @@ urlpatterns = [
     # Favorite project
     path('fovorite/project/', FavoritesProjectView.as_view()),
     path('favorite/project/<int:pk>/', FavoriteProjectView.as_view()),
+    # Notfiation
+    path('project/notification/', NotificationsView.as_view()),
+    path('project/notification/<int:pk>/', NotificationView.as_view()),
+    path('project/notification/count/', NotificationCountView.as_view()),
 
 ]

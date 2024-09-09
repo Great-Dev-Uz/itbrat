@@ -14,13 +14,14 @@ from utils.renderers import UserRenderers
 from utils.pagination import CustomPagination
 
 from resume.filter import ResumetFilter, FavoriteFilter
-from resume.models import Heading, ResumeModel, FavoritesResume
+from resume.models import Heading, ResumeModel, FavoritesResume, NotificationResume
 from resume.serializers import (
     HeadingSerializer,
     ResumesSerializer,
     ResumeSerializer,
     FavroitesResumeSerializer,
     FavroiteResumeSerializer,
+    NotificationResumeSerializer,
 )
 
 
@@ -164,3 +165,51 @@ class FavoriteResumeView(APIView):
             return Response({"error": "Multiple favorite projects found. Contact support."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except FavoritesResume.DoesNotExist:
             return Response({"error": "Favorite project not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+
+class NotificationResumeCountView(APIView):
+    ''' Resume Notification '''
+    renderer_classes = [UserRenderers]
+    authentication_classes = [JWTAuthentication]    
+    permission_classes = [IsLogin]
+
+    @swagger_auto_schema(tags=['Resume'], responses={200: NotificationResumeSerializer(many=True)})
+    def get(self, request):
+        user = request.user
+        notifications = NotificationResume.objects.filter(favorite__owner=user, is_read=False).count()
+        return Response({'count': notifications}, status=status.HTTP_200_OK)          
+
+
+class NotificationsResumeView(APIView):
+    ''' Resume Notification '''
+    authentication_classes = [JWTAuthentication]    
+    permission_classes = [IsLogin]
+
+    @swagger_auto_schema(tags=['Resume'], responses={200: NotificationResumeSerializer(many=True)})
+    def get(self, request):
+        user = request.user
+        notifications = NotificationResume.objects.filter(favorite__owner=user).order_by('-id')
+        notifications.update(is_read=True)
+
+        serializer = NotificationResumeSerializer(notifications, many=True, context={'request': request})
+        return Response({'notification': serializer.data}, status=status.HTTP_200_OK)
+
+
+class NotificationResumeView(APIView):
+    ''' Notification '''
+    renderer_classes = [UserRenderers]
+    authentication_classes = [JWTAuthentication]    
+    permission_classes = [IsLogin]
+
+    @swagger_auto_schema(tags=['Resume'], responses={200: NotificationResumeSerializer(many=True)})
+    def get(self, request, pk):
+        queryset = get_object_or_404(NotificationResume, id=pk)
+        serializer = NotificationResumeSerializer(queryset, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @swagger_auto_schema(tags=['Resume'], responses={204:  'No Content'})
+    def delete(self, request, pk):
+        notification = NotificationResume.objects.get(id=pk)
+        notification.delete()
+        return Response({"message": "Deleted successfully."}, status=status.HTTP_200_OK)
+

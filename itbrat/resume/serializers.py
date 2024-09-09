@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from authen.serializers import UserInformationSerializer
-from resume.models import Heading, ResumeModel, FavoritesResume
+from resume.models import Heading, ResumeModel, FavoritesResume, NotificationResume
 
 
 class HeadingSerializer(serializers.ModelSerializer):
@@ -75,6 +75,7 @@ class ResumeSerializer(serializers.ModelSerializer):
 
 class FavroitesResumeSerializer(serializers.ModelSerializer):
     resume = ResumesSerializer(read_only=True)
+    owner = UserInformationSerializer(read_only=True)
 
     class Meta:
         model = FavoritesResume
@@ -92,3 +93,11 @@ class FavroiteResumeSerializer(serializers.ModelSerializer):
         favourite.owner = self.context.get('owner')
         favourite.save()
         return favourite
+
+
+class NotificationResumeSerializer(serializers.ModelSerializer):
+    favorite = FavroitesResumeSerializer(read_only=True)
+
+    class Meta:
+        model = NotificationResume
+        fields = ['id', 'favorite', 'is_read']

@@ -3,7 +3,7 @@ from rest_framework import serializers
 from authen.models import CustomUser
 from authen.serializers import UserInformationSerializer
 
-from chat.models import Conversation, ChatMessage, Faq
+from chat.models import Conversation, ChatMessage, Faq, NotificationChat
 
 
 class MessagesSerializer(serializers.ModelSerializer):
@@ -21,6 +21,7 @@ class MessagesSerializer(serializers.ModelSerializer):
         create_message = ChatMessage.objects.create(**validated_data)
         create_message.sender = sender
         create_message.conversation_id = conversation
+        NotificationChat.objects.create(favorite=create_message)
         create_message.save()
         return create_message
 
@@ -98,3 +99,11 @@ class FaqSerializer(serializers.ModelSerializer):
     class Meta:
         model = Faq
         fields = ['id', 'title', 'description'] 
+
+
+class NotificationChatSerializer(serializers.ModelSerializer):
+    favorite = MessageListSerializer(read_only=True)
+
+    class Meta:
+        model = NotificationChat
+        fields = ['id', 'favorite', 'is_read', 'receiver']

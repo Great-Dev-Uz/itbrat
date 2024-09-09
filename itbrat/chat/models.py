@@ -33,6 +33,12 @@ class ChatMessage(models.Model):
         verbose_name_plural = "Сообщение"
 
 
+class NotificationChat(models.Model):
+    favorite = models.ForeignKey(ChatMessage, on_delete=models.CASCADE, null=True, blank=True)
+    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
+    is_read = models.BooleanField(default=False)
+
+
 class Feedback(models.Model):
     name = models.CharField(max_length=250, verbose_name='Имя')
     email = models.EmailField(verbose_name='E-mail')

@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from asgiref.sync import async_to_sync
 from django.core.files.base import ContentFile
 
-from chat.models import Conversation, ChatMessage
+from chat.models import Conversation, ChatMessage, NotificationChat
 from chat.serializers import MessagesSerializer
 
 
@@ -34,6 +34,7 @@ class ChatConsumer(WebsocketConsumer):
         # Check if the conversation exists
         try:
             conversation = Conversation.objects.get(id=int(self.room_name))
+            
         except ObjectDoesNotExist:
             # Handle the case where the conversation does not exist
             print(f"Conversation with ID {self.room_name} does not exist.")
@@ -45,7 +46,9 @@ class ChatConsumer(WebsocketConsumer):
             _message = ChatMessage.objects.create(sender=sender, attachment=file_data, info=info, text=message, conversation=conversation)
         else:
             _message = ChatMessage.objects.create(sender=sender, text=message, info=info, conversation=conversation)
-
+            
+        receiver = conversation.receiver if conversation.initiator == sender else conversation.initiator
+        NotificationChat.objects.create(favorite=_message, receiver=receiver)
         # Send message to room group
         chat_type = {"type": "chat_message"}
 

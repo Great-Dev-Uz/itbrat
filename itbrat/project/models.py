@@ -47,9 +47,14 @@ class FavoritesProject(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Проект: {self.project.name} - Автор: {self.owner.username}"
+        return f"Проект: {self.project.name}"
     
     class Meta:
         db_table = "favorites_project"
         verbose_name = "Избранно проекте"
         verbose_name_plural = "Избранно проекте"
+
+
+class Notification(models.Model):
+    favorite = models.ForeignKey(FavoritesProject, on_delete=models.CASCADE, null=True, blank=True)
+    is_read = models.BooleanField(default=False)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from project.models import CategoriyaProject, Project, FavoritesProject
+from project.models import CategoriyaProject, Project, FavoritesProject, Notification
 from authen.serializers import UserInformationSerializer
 
 
@@ -23,8 +23,10 @@ class ProjectsSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'contact', 'valuta', 'price', 'skils', 'description', 'image', 'category', 'is_owner', 'favorite', 'owner', 'create_at']
 
     def get_is_owner(self, obj):
-        request = self.context.get('request').user
-        return obj.owner == request
+        request = self.context.get('request', None)  # Request mavjudligini tekshirish
+        if request and hasattr(request, 'user'):
+            return obj.owner == request.user
+        return False
     
     def get_favorite(self, obj):
         user = self.context.get("owner")
@@ -75,6 +77,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 class FavoritesProjectSerializer(serializers.ModelSerializer):
     ''' Favorite Project Serializer '''
     project = ProjectsSerializer(read_only=True)
+    owner = UserInformationSerializer(read_only=True)
 
     class Meta:
         model = FavoritesProject
@@ -92,3 +95,11 @@ class FavoriteProjectSerializer(serializers.ModelSerializer):
         favourite.owner = self.context.get('owner')
         favourite.save()
         return favourite
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    favorite = FavoritesProjectSerializer(read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = ['id', 'favorite', 'is_read']
