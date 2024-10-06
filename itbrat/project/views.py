@@ -214,7 +214,7 @@ class NotificationsView(APIView):
     @swagger_auto_schema(tags=['Project'], responses={200: NotificationSerializer(many=True)})
     def get(self, request):
         user = request.user
-        notifications = Notification.objects.filter(favorite__owner=user).order_by('-id')
+        notifications = Notification.objects.filter(favorite__project__owner=user).order_by('-id')
         notifications.update(is_read=True)
 
         serializer = NotificationSerializer(notifications, many=True, context={'request': request})

@@ -13,6 +13,7 @@ from utils.permissions import IsLogin
 from utils.renderers import UserRenderers
 from utils.pagination import CustomPagination
 
+from authen.models import CustomUser
 from resume.filter import ResumetFilter, FavoriteFilter
 from resume.models import Heading, ResumeModel, FavoritesResume, NotificationResume
 from resume.serializers import (
@@ -188,7 +189,14 @@ class NotificationsResumeView(APIView):
     @swagger_auto_schema(tags=['Resume'], responses={200: NotificationResumeSerializer(many=True)})
     def get(self, request):
         user = request.user
-        notifications = NotificationResume.objects.filter(favorite__owner=user).order_by('-id')
+        
+        # Add this to check what 'user' contains
+        print(f"User type: {type(user)}, User: {user}")
+
+        if not isinstance(user, CustomUser):
+            return Response({'detail': 'Invalid user type'}, status=status.HTTP_400_BAD_REQUEST)
+
+        notifications = NotificationResume.objects.filter(favorite__resume__owner=user).order_by('-id')
         notifications.update(is_read=True)
 
         serializer = NotificationResumeSerializer(notifications, many=True, context={'request': request})
