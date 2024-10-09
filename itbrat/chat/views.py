@@ -109,7 +109,7 @@ class GetConversationView(APIView):
     def get(self, request, convo_id):
         conversation = get_object_or_404(Conversation, id=convo_id)
 
-        messages = conversation.messages.all()  # Retrieve all messages for the conversation
+        messages = conversation.messages.all().order_by('-id')  # Retrieve all messages for the conversation
         # page = self.paginate_queryset(messages)
 
         serializer = ConversationSerializer(conversation, context={'request': request})
@@ -145,7 +145,7 @@ class ConversationView(APIView):
         # Hozirgi foydalanuvchi ishtirokidagi suhbatlar asosiy filtri
         conversation_list = Conversation.objects.filter(
             Q(initiator=request.user) | Q(receiver=request.user)
-        )
+        ).order_by('-id')
 
         # Agar full_name mavjud bo'lsa, uni first_name va last_name da qidirish
         if full_name:
