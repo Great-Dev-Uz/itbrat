@@ -101,8 +101,44 @@ class FaqSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description'] 
 
 
+class ConversationSerializer(serializers.ModelSerializer):
+    sender_type = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Conversation
+        fields = ['id', 'initiator', 'receiver', 'sender_type']
+
+    def get_sender_type(self, obj):
+        user = self.context['request'].user  # Correctly access the user
+        if user:
+            if obj.initiator == user:
+                return UserInformationSerializer(obj.receiver).data
+            elif obj.receiver == user:
+                return UserInformationSerializer(obj.initiator).data
+        return 'initiator'
+
+class MessageListNotiSerializer(serializers.ModelSerializer):
+    sender_type = serializers.SerializerMethodField()
+    sender = UserInformationSerializer(read_only=True)
+    conversation = ConversationSerializer(read_only=True)
+
+    class Meta:
+        model = ChatMessage
+        fields = ['id', 'sender', 'text', 'info', 'timestamp', 'sender_type', 'conversation']
+    
+    def get_sender_type(self, obj):
+        user = self.context['request']
+        user = self.context['request'].user
+        conversation = obj.conversation
+        if user.id == obj.sender_id:
+            if user.id == conversation.initiator_id:
+                return 'initiator'
+            elif user.id == conversation.receiver_id:
+                return 'initiator'
+        return 'resiver'
+
 class NotificationChatSerializer(serializers.ModelSerializer):
-    favorite = MessageListSerializer(read_only=True)
+    favorite = MessageListNotiSerializer(read_only=True)
 
     class Meta:
         model = NotificationChat

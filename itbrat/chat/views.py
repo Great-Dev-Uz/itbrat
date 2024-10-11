@@ -108,8 +108,9 @@ class GetConversationView(APIView):
 
     def get(self, request, convo_id):
         conversation = get_object_or_404(Conversation, id=convo_id)
-
-        messages = conversation.messages.all().order_by('-id')  # Retrieve all messages for the conversation
+        notification =NotificationChat.objects.filter(is_read=False, favorite__conversation=conversation.id)
+        notification.update(is_read=True)
+        messages = conversation.messages.all()  # Retrieve all messages for the conversation
         # page = self.paginate_queryset(messages)
 
         serializer = ConversationSerializer(conversation, context={'request': request})
@@ -154,7 +155,7 @@ class ConversationView(APIView):
                 Q(initiator__last_name__icontains=full_name) |
                 Q(receiver__first_name__icontains=full_name) | 
                 Q(receiver__last_name__icontains=full_name)
-            )
+            ).order_by()
 
         serializer = ConversationListSerializer(conversation_list, many=True, context={"request": request})
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -288,8 +289,7 @@ class NotificationsChatView(APIView):
     @swagger_auto_schema(tags=['chat'], responses={200: NotificationChatSerializer(many=True)})
     def get(self, request):
         user = request.user
-        notifications = NotificationChat.objects.filter(receiver=user).order_by('-id')
-        notifications.update(is_read=True)
+        notifications = NotificationChat.objects.filter(receiver=user, is_read=False).order_by('-id')
 
         serializer = NotificationChatSerializer(notifications, many=True, context={'request': request})
         return Response({'notification': serializer.data}, status=status.HTTP_200_OK)
