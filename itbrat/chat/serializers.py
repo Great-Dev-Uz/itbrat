@@ -101,7 +101,7 @@ class FaqSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'description'] 
 
 
-class ConversationSerializer(serializers.ModelSerializer):
+class ConversationsSerializer(serializers.ModelSerializer):
     sender_type = serializers.SerializerMethodField()
 
     class Meta:
@@ -120,7 +120,7 @@ class ConversationSerializer(serializers.ModelSerializer):
 class MessageListNotiSerializer(serializers.ModelSerializer):
     sender_type = serializers.SerializerMethodField()
     sender = UserInformationSerializer(read_only=True)
-    conversation = ConversationSerializer(read_only=True)
+    conversation = ConversationsSerializer(read_only=True)
 
     class Meta:
         model = ChatMessage
