@@ -157,15 +157,9 @@ class FavoriteResumeView(APIView):
 
     @swagger_auto_schema(tags=['Resume'], responses={204:  'No Content'})
     def delete(self, request, pk):
-        try:
-            favorite = FavoritesResume.objects.get(owner=request.user ,resume=pk)
-            favorite.delete()
-            return Response({"message": "Deleted successfully."}, status=status.HTTP_200_OK)
-        except FavoritesResume.MultipleObjectsReturned:
-            # Handle multiple instances returned, possibly log or raise an error
-            return Response({"error": "Multiple favorite projects found. Contact support."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        except FavoritesResume.DoesNotExist:
-            return Response({"error": "Favorite project not found."}, status=status.HTTP_404_NOT_FOUND)
+        favorite = get_object_or_404(FavoritesResume ,owner=request.user, resume=pk)
+        favorite.delete()
+        return Response({"error": "Favorite project not found."}, status=status.HTTP_404_NOT_FOUND)
         
 
 class NotificationResumeCountView(APIView):
