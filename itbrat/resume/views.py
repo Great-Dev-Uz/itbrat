@@ -157,7 +157,7 @@ class FavoriteResumeView(APIView):
 
     @swagger_auto_schema(tags=['Resume'], responses={204:  'No Content'})
     def delete(self, request, pk):
-        favorite = get_object_or_404(FavoritesResume ,owner=request.user, resume=pk)
+        favorite = get_object_or_404(FavoritesResume, owner=request.user, resume__id=pk)
         favorite.delete()
         return Response({"error": "Favorite project not found."}, status=status.HTTP_404_NOT_FOUND)
         
